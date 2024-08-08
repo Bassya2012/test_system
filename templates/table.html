@@ -1,0 +1,70 @@
+{% extends 'index1.html' %}
+
+{% block title %}
+Таблица
+{% endblock %}
+
+{% block body %}
+<div class="select">
+    <select id="filterSelect" onchange="filterTable()" style="align-items: center;" class="btn btn-outline-success dropdown-toggle">
+        <option value="all">Все результаты</option>
+        <option value="passed">Успешные тесты</option>
+        <option value="failed">Ошибки</option>
+</select>
+</div>
+{% if data == () %}
+    <h1>Нет результатов тестов</h1>
+{% else %}
+    <table class="table table-bordered">
+        <tr>
+            <th>id</th>
+            <th>название теста</th>
+            <th>время выполнения</th>
+            <th>результат</th>
+            <th>ошибки</th>
+        </tr>
+        {% for row in data %}
+        <tr>
+            <td>{{ row[0] }}</td>
+            <td>{{ row[1] }}</td>
+            <td>{{ row[2] }}</td>
+            <td>{{ row[3] }}</td>
+            <td class="expandable-cell">{{ row[4] }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+{% endif %}
+    <script>
+
+        function filterTable() {
+            const filterValue = document.getElementById('filterSelect').value;
+            const rows = document.querySelectorAll('tr');
+
+            rows.forEach((row, index) => {
+                if (index === 0) { // Проверка для заголовка таблицы
+                    row.style.display = 'table-row';
+                } else {
+                    if (filterValue === 'all' || row.children[3].textContent === filterValue) {
+                        row.style.display = 'table-row';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                }
+            });
+        }
+
+
+        const expandableCells = document.querySelectorAll('.expandable-cell');
+        expandableCells.forEach(cell => {
+            cell.addEventListener('click', function() {
+                if (cell.style.whiteSpace === 'normal') {
+                    cell.style.whiteSpace = 'nowrap';
+                    cell.style.textOverflow = 'ellipsis';
+                } else {
+                    cell.style.whiteSpace = 'normal';
+                    cell.style.textOverflow = 'clip';
+                }
+            });
+        });
+    </script>
+{% endblock %}

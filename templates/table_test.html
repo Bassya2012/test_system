@@ -1,0 +1,77 @@
+{% extends 'index1.html' %}
+
+{% block title %}
+Таблица
+{% endblock %}
+
+{% block body %}
+<div class="select">
+    <div class="but">
+         <form id="deleteForm" method="post">
+            <button type="button" onclick="deleteSelected()" class="btn btn-danger">Удалить</button>
+        </form>
+         <form action="/deleteall" method="post" enctype="multipart/form-data">
+             <button type="submit" class="btn btn-outline-danger">Удалить все добавленные тесты</button>
+         </form>
+        <form action="/clean" method="post" enctype="multipart/form-data">
+            <button type="submit" class="btn btn-outline-danger">Очистить базу данных с результатами тестов</button>
+        </form>
+    </div>
+ </div>
+{% if data == () %}
+        <h1>Нет добавленных тестов</h1>
+{% else %}
+    <table class="table table-bordered table-hover">
+        <tr>
+            <th></th>
+            <th>id</th>
+            <th>название теста</th>
+            <th>время cron</th>
+            <th>время добавления</th>
+            <th>путь до файла</th>
+        </tr>
+        {% for row in data %}
+        <tr data-id="row{{ row[0] }}">
+            <td><input type="checkbox" id="{{ row[0] }}"></td>
+            <td>{{ row[0] }}</td>
+            <td >{{ row[1] }}</td>
+            <td class="editable">{{ row[2] }}</td>
+            <td>{{ row[3] }}</td>
+            <td class="expandable-cell">{{ row[4] }}</td>
+        </tr>
+        {% endfor %}
+
+    </table>
+{% endif %}
+    <script>
+        let str = [];
+        function deleteSelected() {
+            let str = [];
+            let checkboxes = document.querySelectorAll('input[type=checkbox]');
+            checkboxes.forEach(checkbox => {
+                if (checkbox.checked) {
+                    str.push(checkbox.id);
+                }
+            });
+            if (str.length === 0) {
+                console.log('No checkboxes are checked');
+                return;
+            }
+
+            fetch('/delete', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: new URLSearchParams({ data: str.join(',') })
+            })
+            .then(response => response.text())
+            .then(data => {
+                console.log(data);
+                location.reload();
+            })
+            .catch(error => console.error('Ошибка:', error));
+        }
+
+    </script>
+{% endblock %}

@@ -1,0 +1,21 @@
+{% extends 'index1.html' %}
+
+{% block title %}
+Страница добавления тестов
+{% endblock %}
+
+{% block body %}
+<div class="m-3">
+   <h1 class="center">Загрузить выбранный тест в очередь</h1>
+    <form action="/upload" method="post" enctype="multipart/form-data" >
+        <input type="file" name="file" accept=".py" >
+        <input type="text" name="time" id="time">
+        <button type="submit" id="but" class="btn btn-outline-success">Загрузить выбранный тест</button>
+    </form>
+</div>
+    {% if result %}
+        <h1>Добавленный файл</h1>
+        <p>{{ result }}</p>
+    {% endif %}
+
+{% endblock %}
