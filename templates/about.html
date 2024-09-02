@@ -1,0 +1,45 @@
+{% extends 'basic.html' %}
+
+{% block title %}
+Эбаут us
+{% endblock %}
+
+{% block body %}
+
+<h1 class="text-center position-relative display-3 ">Система тестов</h1>
+<div id="main" class="m-3 row " >
+    <div id="block1" class="col-md-6 ">
+        <div id='list_test'> Выберите тест
+            <input type="file" accept=".html,.htm">
+        </div>
+    </div>
+    <div id="block2" class="col-md-6">
+        <div id="hour" class="p-2"> Раз в час </div>
+        <div id="day" class="p-2"> Раз в день </div>
+        <div id="month" class="p-2"> Раз в месяц </div>
+        <div id="year" class="p-2"> Раз в год </div>
+        <div id="week" class="p-2"> Раз в неделю </div>
+    </div>
+
+
+    </div>
+
+</div>
+<button id="startTest" class="btn btn-success d-grid col-2 mx-auto">Запустить тест</button>
+<script>
+    const startTest = document.getElementById('startTest');
+    const input = document.querySelector('input[type="file"]');
+    startTest.addEventListener('click', function() {
+        const file = input.files[0];
+        const reader = new FileReader();
+
+        reader.onload = function(e) {
+            const contents = e.target.result;
+            console.log(contents); // здесь вы можете обрабатывать или выводить содержимое файла
+        };
+
+    reader.readAsText(file); // прочитать содержимое файла как текст
+});
+
+</script>
+{% endblock %}

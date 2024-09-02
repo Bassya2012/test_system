@@ -1,0 +1,66 @@
+{% extends 'index1.html' %}
+
+{% block title %}
+Дашборд теста
+{% endblock %}
+
+{% block body %}
+<div class=" m-3">
+    {% if values == [] %}
+        <p>Еще нет результатов...</p>
+    {% else %}
+       <h1>Выбери тест, по которому надо построить дашборд</h1>
+        <form action="/choose" method="post" enctype="multipart/form-data">
+            <select id="mySelect" name="data">
+                {% for value in values %}
+                    <option value="{{ value }}">{{ value }}</option>
+                {% endfor %}
+            </select>
+            <button type="submit" onclick="showSelected()" class="btn btn-success">Выбрать</button>
+        </form>
+    {% endif %}
+    {% if result != '' %}
+        <h1>Результат обработки файла:</h1>
+        <p>{{ result }}</p>
+    {% endif %}
+<!--    <div style="display: flex; align-items: center;">-->
+<!--        <img id="chartImage" src="data:image/png;base64,{{ pie_chart }}" style="margin-right: 10px;">-->
+<!--        <div id="mistake" style="margin: 0;" >-->
+        <img id="chartImage" src="data:image/png;base64,{{ pie_chart }}">
+        <div id="mistake">
+            {% if answer != '' %}
+                <h3>Ошибки:</h3>
+                <p>{{ answer }}</p>
+            {% endif %}
+
+        </div>
+<!--    </div>-->
+</div>
+<script>
+    function showSelected() {
+        // let element = document.getElementById('mistake');
+        // if (element.style.opacity === '0') {
+        //     element.style.opacity = '1';
+        // }
+        let dropdown = document.getElementById("mySelect");
+        let selectedOption = dropdown.options[dropdown.selectedIndex].text;
+        console.log("Selected option: " + selectedOption);
+        fetch('http://127.0.0.1:5000/chosen', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        })
+        .then(response => {
+            if (!response.ok) {
+              throw new Error('Ошибка при получении данных: ' + response.status);
+            }
+            return response.json();
+          })
+        .then(data => {
+            console.log(data,'data');
+        })
+    }
+
+</script>
+{% endblock %}
